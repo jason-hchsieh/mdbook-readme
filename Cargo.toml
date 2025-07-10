@@ -1,0 +1,8 @@
+[package]
+name = "mdbook-readme"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+mdbook = "0.4.51"
+semver = "1.0.26"
