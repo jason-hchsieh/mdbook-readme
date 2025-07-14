@@ -36,6 +36,17 @@ struct OnePageBackend;
 
 impl OnePageBackend {
     fn process(&self, ctx: RenderContext) {
+        // Specify root of the link in README.md
+        let root = if let Some(tbl) = ctx.config.get_renderer("readme") {
+            if let Some(toml::value::Value::String(s)) = tbl.get("root") {
+                std::path::PathBuf::from(s)
+            } else {
+                std::path::PathBuf::from(".")
+            }
+        } else {
+            std::path::PathBuf::from(".")
+        };
+
         let output_file = ctx.destination.clone().join("README.md");
         let mut output_file = std::fs::File::create(&output_file)
             .expect("Failed to create README.md");
@@ -82,10 +93,10 @@ impl OnePageBackend {
                                     .collect::<String>();
                                 write!(output_file, "{}", indent)?; 
                                 write!(output_file, "-")?;
+                                let path = ch.source_path.as_ref().expect("Failed to get source path");
+                                let path = root.clone().join(path);
                                 writeln!(output_file, " [{}]({})",
-                                  ch.name, 
-                                  ch.source_path.as_ref().expect("Failed to get source path").display(),
-                                )?;
+                                  ch.name, path.display())?;
                             }
                             Chapter::Suffix => {
                                 writeln!(output_file, "{}", ch.content)?;
