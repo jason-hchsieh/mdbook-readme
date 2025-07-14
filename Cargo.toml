@@ -6,4 +6,3 @@ edition = "2024"
 [dependencies]
 mdbook = "0.4.51"
 semver = "1.0.26"
-toml = "0.5"
